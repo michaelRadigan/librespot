@@ -1,0 +1,36 @@
+platform:
+    - x64
+
+environment:
+    RUST_DIR: C:\Rust
+    matrix:
+        - TARGET: x86_64-pc-windows-gnu
+          RUST: nightly
+
+install:
+    - set PATH=%PATH%;%RUST_DIR%\bin
+    - cd %TEMP%
+    - C:\MinGW\msys\1.0\bin\sh /c/projects/librespot/.appveyor/rust.sh
+    - C:\MinGW\msys\1.0\bin\sh /c/projects/librespot/.appveyor/protobuf.sh
+    - C:\MinGW\msys\1.0\bin\sh /c/projects/librespot/.appveyor/portaudio.sh
+    - cd %APPVEYOR_BUILD_FOLDER%
+
+    #- mkdir build_msvc
+    #- cd build_msvc
+    #- cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%PROTOBUF_DIR% -DCMAKE_BUILD_TYPE=Release ../cmake
+    #- nmake install
+    #- cd ../..
+
+    #- ps: Start-FileDownload "https://github.com/adfernandes/precompiled-portaudio-windows/raw/master/portaudio-r1891-build.zip"
+    #- 7z x portaudio-r1891-build.zip
+
+
+build_script:
+    - set PROTOBUF_INCLUDE_DIR=/usr/local/include
+    - set PROTOBUF_LIB_DIR=/usr/local/lib
+    - cargo build
+
+cache:
+    - '%TEMP%\protobuf-2.6.1 -> .appveyor/protobuf.sh'
+    - '%TEMP%\portaudio -> .appveyor/portaudio.sh'
+    - target
